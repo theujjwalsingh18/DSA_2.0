@@ -1,0 +1,41 @@
+// Problem : https://leetcode.com/problems/capacity-to-ship-packages-within-d-days/
+// ------------------  Solution -----------------------------
+#include <bits/stdc++.h>
+using namespace std;
+class Solution {
+public:
+    int findDays(vector<int>& weights, int cap) {
+        int days = 1, load = 0;
+        for (int i = 0; i < weights.size(); i++) {
+            if (weights[i] + load > cap) {
+                days += 1;
+                load = weights[i];
+            } else {
+                load += weights[i];
+            }
+        }
+        return days;
+    }
+    int shipWithinDays(vector<int>& weights, int days) {
+        int low = *max_element(weights.begin(), weights.end());
+        int high = accumulate(weights.begin(), weights.end(), 0);
+
+        while (low <= high) {
+            int mid = low + (high - low) / 2;
+            int noOfDays = findDays(weights, mid);
+            if (noOfDays <= days) {
+                high = mid - 1;
+            } else {
+                low = mid + 1;
+            }
+        }
+        return low;
+    }
+};
+/*
+--------------------- Time Complexity and Space Complexity -----------------------
+|                                                                                |
+|                  T.C :  O(log(max - sum)*N)         S.C : O(1)                 |
+|                                                                                |
+----------------------------------------------------------------------------------
+*/
